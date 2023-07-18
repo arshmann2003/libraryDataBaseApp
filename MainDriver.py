@@ -2,7 +2,7 @@ import sqlite3
 import Menu
 import Queries as Q
 
-QuereyList = {1:Q.findItemInLibrary()}
+QuereyList = {1:Q.findItemInLibrary(),2:Q.borrowItem(),3:Q.returnBorrowedItem(),4:Q.donateItem(),5:Q.findEvent(),6:Q.registerEvent(),7:Q.volunteerForLibrary(),8:Q.askHelp()}
 
 conn = sqlite3.connect('library.db')
 
@@ -18,5 +18,6 @@ with conn:
             break
 
         querey = QuereyList[menuChoice]
+        print(querey)
   
     

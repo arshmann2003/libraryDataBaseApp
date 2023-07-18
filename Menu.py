@@ -1,4 +1,4 @@
-menuList = {1:"Find an item in the library",2:"Borrow an item from the library",3:" Return a borrowed item",4:"Donate an item to the library", 5:"Find an event in the library",6:"Register for an event in the library",7:"Volunteer for the library", 8:"Ask for help from a librarian"}
+menuList = {1:"Find an item in the library",2:"Borrow an item from the library",3:"Return a borrowed item",4:"Donate an item to the library", 5:"Find an event in the library",6:"Register for an event in the library",7:"Volunteer for the library", 8:"Ask for help from a librarian"}
 
 def displaylMenu():
     n = len(menuList)
