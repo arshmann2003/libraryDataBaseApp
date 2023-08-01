@@ -23,24 +23,23 @@ class Controller:
                 if(menuChoice == 0): 
                     break
                 quereyList(menuChoice)
-
+    
 
 def quereyList(num):
-    match num:
-        case 1:
-            Q.findItemInLibrary(cursor)
-        case 2:
-            Q.borrowItem(cursor)
-        case 3:
-            Q.returnBorrowedItem(cursor)
-        case 4:
-            Q.donateItem(cursor)
-        case 5:
-            Q.findEvent(cursor)
-        case 6:
-            Q.registerEvent(cursor)
-        case 7:
-            Q.volunteerForLibrary(cursor)
-        case 8:
-            Q.askHelp(cursor)    
+    if(num == 1):
+        Q.findItemInLibrary(cursor)
+    elif(num == 2):
+        Q.borrowItem(cursor)
+    elif(num == 3):
+        Q.returnBorrowedItem(cursor)
+    elif(num == 4):
+        Q.donateItem(cursor)
+    elif(num == 5):
+        Q.findEvent(cursor)
+    elif(num == 6):
+        Q.registerEvent(cursor)
+    elif(num == 7):
+        Q.volunteerForLibrary(cursor)
+    elif(num == 8):
+        Q.askHelp(cursor)    
 
