@@ -1,18 +1,17 @@
-from colorama import Fore, Style
+
 
 menuList = {1:"Find an item in the library",2:"Borrow an item from the library",3:"Return a borrowed item",4:"Donate an item to the library", 5:"Find an event in the library",6:"Register for an event in the library",7:"Volunteer for the library", 8:"Ask for help from a librarian"}
 
 def displaylMenu():
     n = len(menuList)
-    print(f"{Fore.BLUE}\n=============== MENU ================={Style.RESET_ALL}")
+    print(f"\n=============== MENU =================")
     for i in range(n):
-        print(f"{Fore.GREEN}{i}. {menuList[i+1]}{Style.RESET_ALL}")
-    print(f"{Fore.BLUE}======================================={Style.RESET_ALL}")
+        print(f"{i+1}. {menuList[i+1]}")
+    print(f"=======================================")
 
-def getInput():
+def getMenuInput():
     while(True):
-        userInput = input(f"{Fore.RED}Choose Menu Option(1-8) or 0 to quit: ")
-        {Style.RESET_ALL}
+        userInput = input(f"Choose Menu Option(1-8) or 0 to quit: ")
         if(validateInput(userInput)):
             return int(userInput)
     
