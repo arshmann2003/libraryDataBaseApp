@@ -2,24 +2,26 @@ class UserInput:
     attributes = {"Item": "id, ItemType, Title, AUthor, Publisher, Availability",
                   "User": "UserID, Username, Email, Password, UserType",
                   "Borrowing" : "BorrowingID, UserID, ItemID, BorrowDate, DueDate, Returned",
-                  "Donation": "DonationID, UserID, ItemID, DonationDate"
+                  "Donation": "DonationID, UserID, ItemID, DonationDate",
+                  "Event": "EventID, EventType, Title, Description, Date, Location, Audience"
                   }
+# Event(EventID, EventType, Title, Description, Date, Location, Audience)
 
     def getAuthorName():
         return input("Enter the author's name: ").strip()
         
     def printData(list, table):
-        print("---------------------------------------------------------------------------")
+        print("------------------------------------------------------------------------------------------------------------------------------------------------------")
         print(f"Table:{table}")
         print(UserInput.attributes[table])
         for row in list:
             list = ""
-            print("---------------------------------------------------------------------------")
+            print("------------------------------------------------------------------------------------------------------------------------------------------------------")
             for col in row:
                 list += str(col)
                 list += " | "
             print(list)
-        print("---------------------------------------------------------------------------")
+        print("------------------------------------------------------------------------------------------------------------------------------------------------------")
     
     def getTitle():
         return input("Enter the Items title: ").strip()
@@ -122,3 +124,16 @@ class UserInput:
         choice = input("Which table: ")
         print("-----------------------")
         return choice
+
+    def getEventType():
+        validTypes = ["Book Club","Art Show","Film Screening"]
+        userInput = ""
+        while(userInput not in validTypes):
+            userInput = input("Event Type (press 1 for event types): ")
+            if(userInput == "1"):
+                print(":::::::::::::::::::::::")
+                for type in validTypes:
+                    print(type)
+                print(":::::::::::::::::::::::")
+        return userInput
+        

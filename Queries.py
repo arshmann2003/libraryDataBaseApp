@@ -230,10 +230,28 @@ def donateItem(cursor):
     )
 
 def findEvent(cursor):
-    return ""
+    eventType = ui.getEventType()
+    querey = f"SELECT * FROM Event WHERE EventType = ?"
+    cursor.execute(querey, (eventType,))
+    result = cursor.fetchall()
+    ui.printData(result, "Event")
+    
 
 def registerEvent(cursor):
-    return ""
+    usernames = getUsernames(cursor)
+    username = ""
+    while(True):
+        if(not ui.accountExists()):
+            username = createNewUser(cursor)
+            break
+        else:
+            username = ui.getUsername()
+            if(username in usernames):
+                break
+            else:
+                print("Username not found")
+            if(username == "-1"):
+                return
 
 def volunteerForLibrary(cursor):
     return ""
