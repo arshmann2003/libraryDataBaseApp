@@ -144,3 +144,16 @@ class UserInput:
     
     def eventError():
         print("User is already in this event")
+
+    def getHelp():
+        print("<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>")
+        print("How the library is layed out")
+        print("""
+        The libray database relies on user accounts which allow operations like
+        enrolling into events, checking out a book, returing a book, and volunteering. Almost every
+        option of the menu allows for account creation with a password. The password makes sure
+        only the right user is able to check out an item. The items are orignized in such a way
+        that they all have unique ids which can attach to attached to a userId in the borrowing list.
+        I enourage you to look at menu option 9 which displays how the library stores data.
+        """)
+        

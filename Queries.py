@@ -29,17 +29,13 @@ def findItemInLibrary(cursor):
 
 
 def borrowItem(cursor):
-    # Borrowing(BorrowingID, UserID FK, ItemID FK, BorrowDate, DueDate, Returned)
-    # User(UserID, Username, Email, Password, UserType) 
     rows = getData(cursor, "Item", False)
     itemID = ui.getItemID(rows, 2)
     if(itemID == -1): return
-    
     if(ui.returningUser()):
         username = ui.getUsername()
         if(username == "-1"):
             return
-        
         if(username in getUsernames(cursor)):
             invalid = True 
             while(invalid):
@@ -56,7 +52,6 @@ def borrowItem(cursor):
     else:
         createNewUser(cursor)
 
-# User(UserID, Username, Email, Password, UserType)
 def createNewUser(cursor):
     while(True):
         username = ui.getUsername()
@@ -78,7 +73,6 @@ def createNewUser(cursor):
     )
     return username
     
-
 def getUserID(cursor, username):
     query = "SELECT UserID FROM User WHERE Username = ?"
     cursor.execute(query, (username,))
@@ -87,16 +81,12 @@ def getUserID(cursor, username):
         return result[0][0]
     return False
 
-        
-# Borrowing(BorrowingID, UserID FK, ItemID FK, BorrowDate, DueDate, Returned)
 def insertIntoBorrowing(cursor, username, itemID):
     userID = getUserID(cursor, username)
-   
     current_date_time = datetime.now()
     formatted_date = current_date_time.strftime("%Y-%m-%d")
     seven_days_later = current_date_time + timedelta(days=7)
     formatted_date_later = seven_days_later.strftime("%Y-%m-%d")
-
     if(validBorrowingInsertion(cursor, userID, itemID)):
         cursor.execute(
         f"""INSERT INTO Borrowing (UserID,ItemID,BorrowDate,DueDate,Returned) VALUES ({userID},{itemID},{formatted_date},{formatted_date_later},{0})""")
@@ -146,8 +136,6 @@ def displayData(cursor):
     elif(x == '6'):
         getData(cursor, "Attendee", True)
 
-
-
 def displayUsersBorrowing(cursor):
     querey = "SELECT UserID FROM Borrowing"
     cursor.execute(querey)
@@ -163,7 +151,6 @@ def displayUsersBorrowing(cursor):
         result = cursor.fetchall()
         usernames.append(result[0][0])
     ui.displayUsernames(usernames)
-    
 
 def returnBorrowedItem(cursor):
     username = ""
@@ -201,8 +188,6 @@ def returnBorrowedItem(cursor):
     deleteQuerey = "DELETE FROM Borrowing WHERE UserId = ? AND ItemID = ?"
     cursor.execute(deleteQuerey, (userID, itemID))
 
-
-# Insert into Item
 def donateItem(cursor):
     usernames = getUsernames(cursor)
     username = ""
@@ -289,4 +274,5 @@ def volunteerForLibrary(cursor):
     cursor.execute(querey, (userID,))
     
 def askHelp(cursor):
+    ui.getHelp()
     return ""
