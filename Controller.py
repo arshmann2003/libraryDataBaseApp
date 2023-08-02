@@ -23,6 +23,9 @@ class Controller:
                 if(menuChoice == 0): 
                     break
                 quereyList(menuChoice)
+        
+        conn.commit()
+        conn.close()
     
 
 def quereyList(num):
