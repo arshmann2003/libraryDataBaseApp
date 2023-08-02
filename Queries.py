@@ -2,18 +2,20 @@ import sqlite3
 from UserInput import UserInput as ui
 
 
-def getData(cursor, table):
+def getData(cursor, table, print):
     query = f"SELECT * FROM {table}"
     cursor.execute(query)
     result = cursor.fetchall()
-    ui.printData(result, table)
+    if(print):
+        ui.printData(result, table)
+    return result
 
 def findItemInLibrary(cursor):  
     column_to_check = "Author"
     column_to_check_two = "Title"
     table_to_check = "Item"
     if(input("Press 1 to display all Items, 0 to search for an Item: ").strip() == "1"):
-        getData(cursor, table_to_check)
+        getData(cursor, table_to_check, True)
     else:
         author_value_to_check = ui.getAuthorName()
         title_value_to_check = ui.getTitle()
@@ -27,10 +29,17 @@ def findItemInLibrary(cursor):
 
 
 def borrowItem(cursor):
-    # Borrowing(BorrowingID, UserID FK, ItemID FK, BorrowDate, DueDate, Returned) 
-    getData(cursor, "Borrowing")
+    # Borrowing(BorrowingID, UserID FK, ItemID FK, BorrowDate, DueDate, Returned)
+    # User(UserID, Username, Email, Password, UserType) 
+    rows = getData(cursor, "Item", False)
+    
+    itemID = ui.getItemID(rows)
+    if(itemID == 0):
+        ui.printData(rows, "Item")
+        borrowItem(cursor)
+    
+    # INSERT NEW TUPLE INTO BORROWING
 
-    return ""
 
 def returnBorrowedItem(cursor):
     return ""
