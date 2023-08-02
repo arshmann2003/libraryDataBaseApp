@@ -1,7 +1,8 @@
 class UserInput:
     attributes = {"Item": "id, ItemType, Title, AUthor, Publisher, Availability",
                   "User": "UserID, Username, Email, Password, UserType",
-                  "Borrowing" : "BorrowingID, UserID, ItemID, BorrowDate, DueDate, Returned"
+                  "Borrowing" : "BorrowingID, UserID, ItemID, BorrowDate, DueDate, Returned",
+                  "Donation": "DonationID, UserID, ItemID, DonationDate"
                   }
 
     def getAuthorName():
@@ -49,7 +50,6 @@ class UserInput:
                         x += ","
                 print(f"Invalid id range[{x}]")
 
-
     def getUsername():
         return input("Enter your username (-1 to quit): ")
 
@@ -58,11 +58,13 @@ class UserInput:
 
     def getEmail():
         return input("Enter email: ")
+    
     def returningUser():
         ans = input("Do you have an account Y or N: ")
         if(ans == "Y"):
             return True
         return False
+    
     def getStatus():
         userType = input("Choose one [M: Member, L: Librarian, V: Volunteer]").strip()
         if(userType == "M"):
@@ -85,8 +87,38 @@ class UserInput:
         print("--------------------------------------------------------")
         return choice
 
-
     def displayUsernames(list):
         for item in list:
             print(item)
         print("--------------------------------------------------------")
+
+    def accountExists():
+        choice = ""
+        while choice not in ["Y", "N"]:
+            choice = input("Do you have an existing account Y or N: ")
+        
+        if(choice == "Y"):
+            return True
+        return False
+    
+    def titleName():
+        return input("title of item: ")
+
+    def authorName():
+        return (input("Author name: "))
+    
+    def itemType():
+        return input("Item Type: ")
+    
+    def publisher():
+        return input("Publisher: ")
+    
+    def getDataOption():
+        print("-----------------------")
+        print("1: all items")
+        print("2: people borrowing items")
+        print("3: Users in library")
+        print ("4: donation table")
+        choice = input("Which table: ")
+        print("-----------------------")
+        return choice

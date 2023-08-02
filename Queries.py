@@ -58,7 +58,6 @@ def borrowItem(cursor):
 
 # User(UserID, Username, Email, Password, UserType)
 def createNewUser(cursor):
-    print("NEW USER CREATION")    
     while(True):
         username = ui.getUsername()
         if(username == "-1"):
@@ -77,6 +76,7 @@ def createNewUser(cursor):
         f"""INSERT INTO User (Username, Email, Password, UserType) 
             VALUES ('{username}', '{email}', '{password}', '{member}')"""
     )
+    return username
     
 
 def getUserID(cursor, username):
@@ -97,13 +97,13 @@ def insertIntoBorrowing(cursor, username, itemID):
     seven_days_later = current_date_time + timedelta(days=7)
     formatted_date_later = seven_days_later.strftime("%Y-%m-%d")
 
-    if(validInsertion(cursor, userID, itemID)):
+    if(validBorrowingInsertion(cursor, userID, itemID)):
         cursor.execute(
         f"""INSERT INTO Borrowing (UserID,ItemID,BorrowDate,DueDate,Returned) VALUES ({userID},{itemID},{formatted_date},{formatted_date_later},{0})""")
     else:
         print(f"{username} is already borrowing such item")
     
-def validInsertion(cursor, userID, itemID):
+def validBorrowingInsertion(cursor, userID, itemID):
     querey = "SELECT UserID, ItemID FROM Borrowing WHERE UserID = ? AND ItemID = ?"
     cursor.execute(querey, (userID, itemID))
     result = cursor.fetchall()
@@ -131,11 +131,18 @@ def getUsernames(cursor):
         usernames.append(row[1])    
     return usernames
 
-
 def displayData(cursor):
-    getData(cursor, "User", True)
-    getData(cursor, "Borrowing", True)
-    getData(cursor, "Item", True)
+    x = ui.getDataOption()
+    if(x == '1'):
+        getData(cursor, "Item", True)
+    elif(x == '2'):
+        getData(cursor, "Borrowing", True)
+    elif(x == '3'):
+        getData(cursor, "User", True)
+    elif(x == '4'):    
+        getData(cursor, "Donation", True)
+
+
 
 def displayUsersBorrowing(cursor):
     querey = "SELECT UserID FROM Borrowing"
@@ -171,7 +178,6 @@ def returnBorrowedItem(cursor):
                 displayUsersBorrowing(cursor)
             username = ui.getUsername()
         i+=1
-            
     querey = "SELECT ItemID FROM Borrowing WHERE UserID = ?"
     cursor.execute(querey, (userID,))
     result = cursor.fetchall()
@@ -190,10 +196,38 @@ def returnBorrowedItem(cursor):
     
     deleteQuerey = "DELETE FROM Borrowing WHERE UserId = ? AND ItemID = ?"
     cursor.execute(deleteQuerey, (userID, itemID))
-    
+
+
 # Insert into Item
 def donateItem(cursor):
-    return ""
+    usernames = getUsernames(cursor)
+    username = ""
+    while(True):
+        if(not ui.accountExists()):
+            username = createNewUser(cursor)
+            break
+        else:
+            username = ui.getUsername()
+            if(username in usernames):
+                break
+            else:
+                print("Username not found")
+            if(username == "-1"):
+                return
+    userID = getUserID(cursor, username)
+    title = ui.titleName()
+    author = ui.authorName()
+    publisher = ui.publisher()
+    itemType = ui.itemType()
+    current_date_time = datetime.now()
+    formatted_date = current_date_time.strftime("%Y-%m-%d")
+    cursor.execute(
+        f"""INSERT INTO Item (ItemType, Title, Author, Publisher, Availability) VALUES ('{itemType}','{title}','{author}','{publisher}',{1})"""
+    )
+    inserted_item_id = cursor.lastrowid
+    cursor.execute(
+        f"""INSERT INTO Donation (UserID, ItemID, DonationDate) VALUES ({userID},{inserted_item_id},'{formatted_date}')"""
+    )
 
 def findEvent(cursor):
     return ""
