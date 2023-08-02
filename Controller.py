@@ -10,7 +10,7 @@ import Queries as Q
 # Attendee(EventID FK, UserID FK) Personnel(PersonnelID, Name, Position) 
 # Donation(DonationID, UserID FK, ItemID FK, DonationDate)
 
-conn = sqlite3.connect('library.db')
+conn = sqlite3.connect('./sql/library.db')
 cursor = conn.cursor()
 
 class Controller:
@@ -42,4 +42,7 @@ def quereyList(num):
         Q.volunteerForLibrary(cursor)
     elif(num == 8):
         Q.askHelp(cursor)    
+    elif(num == 9):
+        Q.displayData(cursor)
+
 
