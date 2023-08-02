@@ -2,9 +2,14 @@ import sqlite3
 from UserInput import UserInput as ui
 from datetime import datetime, timedelta
 
-def getData(cursor, table, print):
-    query = f"SELECT * FROM {table}"
-    cursor.execute(query)
+def getData(cursor, table, print, available=False):
+    query = ""
+    if(not available):
+        query = f"SELECT * FROM {table}"
+    else:
+        query = f"SELECT * FROM {table} WHERE Availability = 1"
+
+    cursor.execute(query)    
     result = cursor.fetchall()
     if(print):
         ui.printData(result, table)
@@ -22,17 +27,18 @@ def findItemInLibrary(cursor):
         title_value_to_check = ui.getTitle()
         query = f"SELECT * FROM Item WHERE {column_to_check} = ? AND {column_to_check_two} = ?"
         cursor.execute(query, (author_value_to_check,title_value_to_check))
-        result = cursor.fetchone()
+        result = cursor.fetchall()
         if result:
-            print(f"The Item '{title_value_to_check}' by '{author_value_to_check}' is present  in the library.")
+            print(f"The Item '{title_value_to_check}' by '{author_value_to_check}' is present in the library, itemID is {result[0][0]}.")
         else:
             print(f"The Item '{title_value_to_check}' by '{author_value_to_check}' is NOT present in the library.")
     else:
         findItemInLibrary(cursor)
 
 def borrowItem(cursor):
-    rows = getData(cursor, "Item", False)
+    rows = getData(cursor, "Item", False, True)
     itemID = ui.getItemID(rows, 2)
+    username = ""
     if(itemID == -1): return
     if(ui.returningUser()):
         username = ui.getUsername()
@@ -44,6 +50,7 @@ def borrowItem(cursor):
                 password = ui.getPassword()
                 if(validatePassword(cursor, username, password)):
                     insertIntoBorrowing(cursor, username, itemID)
+                    ui.itemBorrowed(username, itemID)
                     return
                 elif(password=="-1"):
                     return
@@ -53,8 +60,12 @@ def borrowItem(cursor):
             print("user not found")
     else:
         createNewUser(cursor)
+        borrowItem(cursor)
+    
 
 def createNewUser(cursor):
+    print("++++++++++++++++++++++++++++++++++")
+    print("Creating New User")
     while(True):
         username = ui.getUsername()
         if(username == "-1"):
@@ -73,6 +84,7 @@ def createNewUser(cursor):
         f"""INSERT INTO User (Username, Email, Password, UserType) 
             VALUES ('{username}', '{email}', '{password}', '{member}')"""
     )
+    print("Account Created\n++++++++++++++++++++++++++++++++++")
     return username
     
 def getUserID(cursor, username):
@@ -89,16 +101,16 @@ def insertIntoBorrowing(cursor, username, itemID):
     formatted_date = current_date_time.strftime("%Y-%m-%d")
     seven_days_later = current_date_time + timedelta(days=7)
     formatted_date_later = seven_days_later.strftime("%Y-%m-%d")
-    if(validBorrowingInsertion(cursor, userID, itemID)):
+    if(validBorrowingInsertion(cursor, userID, itemID)):        
         cursor.execute(
-        f"""INSERT INTO Borrowing (UserID,ItemID,BorrowDate,DueDate,Returned) VALUES ({userID},{itemID},{formatted_date},{formatted_date_later},{0})""")
+        f"""INSERT INTO Borrowing (UserID,ItemID,BorrowDate,DueDate,Returned) VALUES ({userID},{itemID},'{formatted_date}','{formatted_date_later}',{0})""")
     else:
         print(f"{username} is already borrowing such item")
     
 def validBorrowingInsertion(cursor, userID, itemID):
     querey = "SELECT UserID, ItemID FROM Borrowing WHERE UserID = ? AND ItemID = ?"
     cursor.execute(querey, (userID, itemID))
-    result = cursor.fetchall()
+    result = cursor.fetchone()
     if(result):
         return False
     return True
@@ -107,7 +119,6 @@ def validatePassword(cursor, username, password):
     column_to_check = "Username"
     column_to_check_two = "Password"
     table_to_check = "User"
-
     query = f"SELECT * FROM {table_to_check} WHERE {column_to_check} = ? AND {column_to_check_two} = ?"
     cursor.execute(query, (username,password))
     result = cursor.fetchone()
@@ -160,6 +171,7 @@ def returnBorrowedItem(cursor):
         return
     i = 0
     while(True):
+       
         userID = getUserID(cursor, username)
         if(userID != False):
             break
@@ -174,6 +186,10 @@ def returnBorrowedItem(cursor):
     querey = "SELECT ItemID FROM Borrowing WHERE UserID = ?"
     cursor.execute(querey, (userID,))
     result = cursor.fetchall()
+
+    if(len(result) < 1):
+        print("User is not borrowing any books")
+        return
     querey2 = "SELECT * FROM Item WHERE ItemID = ?"
     usersItems = []
     for row in result:
@@ -189,6 +205,7 @@ def returnBorrowedItem(cursor):
     
     deleteQuerey = "DELETE FROM Borrowing WHERE UserId = ? AND ItemID = ?"
     cursor.execute(deleteQuerey, (userID, itemID))
+    print(f"{username} has returned item {itemID}")
 
 def donateItem(cursor):
     usernames = getUsernames(cursor)
@@ -277,4 +294,3 @@ def volunteerForLibrary(cursor):
     
 def askHelp(cursor):
     ui.getHelp()
-    return ""
