@@ -141,6 +141,10 @@ def displayData(cursor):
         getData(cursor, "User", True)
     elif(x == '4'):    
         getData(cursor, "Donation", True)
+    elif(x == '5'):
+        getData(cursor, "Event", True)
+    elif(x == '6'):
+        getData(cursor, "Attendee", True)
 
 
 
@@ -235,7 +239,7 @@ def findEvent(cursor):
     cursor.execute(querey, (eventType,))
     result = cursor.fetchall()
     ui.printData(result, "Event")
-    
+    return result
 
 def registerEvent(cursor):
     usernames = getUsernames(cursor)
@@ -252,9 +256,37 @@ def registerEvent(cursor):
                 print("Username not found")
             if(username == "-1"):
                 return
+    userID = getUserID(cursor, username)
+    events = findEvent(cursor)
+    eventID = ui.getItemID(events, 6)
+    querey = "SELECT * FROM Attendee WHERE EventID = ? AND UserID = ?"
+    cursor.execute(querey, (eventID, userID))
+    result = cursor.fetchall()
+    if(not result):
+        cursor.execute(
+            f"""INSERT INTO Attendee (EventID, UserID) VALUES ({eventID},{userID})"""
+        )
+    else:
+        ui.eventError()
 
 def volunteerForLibrary(cursor):
-    return ""
-
+    usernames = getUsernames(cursor)
+    username = ""
+    while(True):
+        if(not ui.accountExists()):
+            username = createNewUser(cursor)
+            break
+        else:
+            username = ui.getUsername()
+            if(username in usernames):
+                break
+            else:
+                print("Username not found")
+            if(username == "-1"):
+                return
+    userID = getUserID(cursor, username)
+    querey = f"UPDATE User SET UserType = 'Volunteer' WHERE UserID = ?;"
+    cursor.execute(querey, (userID,))
+    
 def askHelp(cursor):
     return ""

@@ -3,7 +3,8 @@ class UserInput:
                   "User": "UserID, Username, Email, Password, UserType",
                   "Borrowing" : "BorrowingID, UserID, ItemID, BorrowDate, DueDate, Returned",
                   "Donation": "DonationID, UserID, ItemID, DonationDate",
-                  "Event": "EventID, EventType, Title, Description, Date, Location, Audience"
+                  "Event": "EventID, EventType, Title, Description, Date, Location, Audience",
+                  "Attendee": "EventID, UserID"
                   }
 # Event(EventID, EventType, Title, Description, Date, Location, Audience)
 
@@ -36,6 +37,8 @@ class UserInput:
                 itemID = input("Enter id of Item you would like to borrow | D to display items | Q to quit: ").strip()
             elif(opt==3):
                 itemID = input("Enter id of the item you want to return: ").strip()
+            elif(opt==6):
+                itemID = input("Enter id of the Event you want to join: ")
             if(itemID.isdigit() and (int(itemID) in validIDs)):
                 return itemID
             elif(itemID.upper()=="D" and opt == 2):
@@ -117,10 +120,12 @@ class UserInput:
     
     def getDataOption():
         print("-----------------------")
-        print("1: all items")
-        print("2: people borrowing items")
-        print("3: Users in library")
-        print ("4: donation table")
+        print("1: Item table")
+        print("2: Borrowing table")
+        print("3: Users table")
+        print ("4: Donation table")
+        print("5: Event table")
+        print("6: Attendee table")
         choice = input("Which table: ")
         print("-----------------------")
         return choice
@@ -136,4 +141,6 @@ class UserInput:
                     print(type)
                 print(":::::::::::::::::::::::")
         return userInput
-        
+    
+    def eventError():
+        print("User is already in this event")
