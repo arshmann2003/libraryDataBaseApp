@@ -23,21 +23,32 @@ class UserInput:
     def getTitle():
         return input("Enter the Items title: ").strip()
     
-    def getItemID(rows):
+    def getItemID(rows, opt):
         validIDs = []
         for row in rows:
             validIDs.append(int(row[0]))
     
         while(True) :
-            itemID = input("Enter id of Item you would like to borrow | D to display items | Q to quit: ").strip()
+            if(opt==2):
+                itemID = input("Enter id of Item you would like to borrow | D to display items | Q to quit: ").strip()
+            elif(opt==3):
+                itemID = input("Enter id of the item you want to return: ").strip()
             if(itemID.isdigit() and (int(itemID) in validIDs)):
                 return itemID
-            elif(itemID.upper()=="D"):
+            elif(itemID.upper()=="D" and opt == 2):
                 UserInput.printData(rows, "Item")
-            elif(itemID.upper()=="Q"):
+            elif(itemID.upper()=="Q" and opt==2):
                 return -1
-            else:
+            elif(opt==2):
                 print(f"Invalid ids must range {validIDs[0]}-{validIDs[len(validIDs)-1]} ")
+            else:
+                x = ""
+                for id in validIDs:
+                    x += str(id)
+                    if(id != validIDs[len(validIDs)-1]):
+                        x += ","
+                print(f"Invalid id range[{x}]")
+
 
     def getUsername():
         return input("Enter your username (-1 to quit): ")
@@ -60,3 +71,22 @@ class UserInput:
             return "Librarian"
         else:
             return "Volunteer"
+    def getItemTitle():
+        return input ("Enter the title of your item: ")
+    
+    def userNotFound(i):
+        print("--------------------------------------------------------")
+        if(i!=0):
+            print("Username not found")
+        print("0: exit")
+        print("1: display names of users borrowing items")
+        print("2: Enter Username")
+        choice = input("Enter Choice: ")
+        print("--------------------------------------------------------")
+        return choice
+
+
+    def displayUsernames(list):
+        for item in list:
+            print(item)
+        print("--------------------------------------------------------")
