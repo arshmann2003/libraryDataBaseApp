@@ -14,9 +14,10 @@ def findItemInLibrary(cursor):
     column_to_check = "Author"
     column_to_check_two = "Title"
     table_to_check = "Item"
-    if(input("Press 1 to display all Items, 0 to search for an Item: ").strip() == "1"):
+    userChoice = input("Press 1 to display all Items, 0 to search for an Item: ").strip()
+    if(userChoice == "1"):
         getData(cursor, table_to_check, True)
-    else:
+    elif(userChoice == "0"):
         author_value_to_check = ui.getAuthorName()
         title_value_to_check = ui.getTitle()
         query = f"SELECT * FROM Item WHERE {column_to_check} = ? AND {column_to_check_two} = ?"
@@ -26,7 +27,8 @@ def findItemInLibrary(cursor):
             print(f"The Item '{title_value_to_check}' by '{author_value_to_check}' is present  in the library.")
         else:
             print(f"The Item '{title_value_to_check}' by '{author_value_to_check}' is NOT present in the library.")
-
+    else:
+        findItemInLibrary(cursor)
 
 def borrowItem(cursor):
     rows = getData(cursor, "Item", False)
