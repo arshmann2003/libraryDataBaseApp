@@ -6,8 +6,7 @@ class UserInput:
                   "Event": "EventID, EventType, Title, Description, Date, Location, Audience",
                   "Attendee": "EventID, UserID"
                   }
-# Event(EventID, EventType, Title, Description, Date, Location, Audience)
-
+    
     def getAuthorName():
         return input("Enter the author's name: ").strip()
         
@@ -19,7 +18,12 @@ class UserInput:
             list = ""
             print("------------------------------------------------------------------------------------------------------------------------------------------------------")
             for col in row:
-                list += str(col)
+                if(str(col)=="1"):
+                    list += "Available"
+                elif(str(col)=="0"):
+                    list += "Unavailable"
+                else:
+                    list += str(col)
                 list += " | "
             print(list)
         print("------------------------------------------------------------------------------------------------------------------------------------------------------")
