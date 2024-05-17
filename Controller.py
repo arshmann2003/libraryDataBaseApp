@@ -29,23 +29,20 @@ class Controller:
     
 
 def quereyList(num):
-    if(num == 1):
-        Q.findItemInLibrary(cursor)
-    elif(num == 2):
-        Q.borrowItem(cursor)
-    elif(num == 3):
-        Q.returnBorrowedItem(cursor)
-    elif(num == 4):
-        Q.donateItem(cursor)
-    elif(num == 5):
-        Q.findEvent(cursor)
-    elif(num == 6):
-        Q.registerEvent(cursor)
-    elif(num == 7):
-        Q.volunteerForLibrary(cursor)
-    elif(num == 8):
-        Q.askHelp(cursor)    
-    elif(num == 9):
-        Q.displayData(cursor)
+    actions = {
+        1: Q.findItemInLibrary,
+        2: Q.borrowItem,
+        3: Q.returnBorrowedItem,
+        4: Q.donateItem,
+        5: Q.findEvent,
+        6: Q.registerEvent,
+        7: Q.volunteerForLibrary,
+        8: Q.askHelp,
+        9: Q.displayData
+    }
 
-
+    action = actions.get(num)
+    if action:
+        action(cursor)
+    else:
+        print("Invalid selection, please choose a number between 1 and 9.")
